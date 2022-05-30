@@ -8,7 +8,7 @@ const AuthController = require("../Controllers/AuthController");
 router.post("/auth/signup", AuthController.signup);
 
 //@route POST /api/auth/login
-// router.post("/auth/login", AuthController.login);
+router.post("/auth/login", AuthController.login);
 
 
 //@route POST /api/auth/refresh_token
