@@ -18,8 +18,9 @@ const userSchema = new mongoose.Schema({
     },
     refreshToken: {
         type: String,
-        // required: true
     },
+}, {
+    versionKey: false //it remove _v from db
 });
 
 

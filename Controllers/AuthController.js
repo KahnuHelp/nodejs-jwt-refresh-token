@@ -11,18 +11,26 @@ const AuthController = {
             //check if username is already taken:
             let user = await User.findOne({ username: req.body.username });
             if (user) {
-                return res.status(400).json({ error: "Username taken." });
+                return res.status(400).json({
+                    success: false,
+                    error: 'Username is taken'
+                });
             } else {
-                //create new user and generate a pair of tokens and send
+
+                //save user to our db
                 user = await new User(req.body).save();
-                console.log('user', user)
-                let accessToken = await user.createAccessToken();
-                let refreshToken = await user.createRefreshToken();
-                return res.status(201).json({ accessToken, refreshToken });
+
+                return res.status(201).json({
+                    success: true,
+                    data: user
+                });
             }
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ error: "Internal Server Error!" });
+            // console.error(error);
+            return res.status(500).json({
+                success: false,
+                error: error
+            });
         }
     },
 
