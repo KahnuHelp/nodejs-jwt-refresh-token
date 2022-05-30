@@ -1,8 +1,6 @@
 const User = require("../Models/UserModel");
 const Token = require("../Models/TokenModel");
 
-
-
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
@@ -53,10 +51,13 @@ exports.login = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error!" });
     }
 };
+
+
 exports.generateRefreshToken = async (req, res) => {
     try {
         //get refreshToken
-        const { refreshToken } = req.body;
+        const refreshToken = req.body.refreshToken;
+
         //send error if no refreshToken is sent
         if (!refreshToken) {
             return res.status(403).json({ error: "Access denied,token missing!" });
@@ -80,12 +81,30 @@ exports.generateRefreshToken = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error!" });
     }
 };
+
+
 exports.logout = async (req, res) => {
     try {
         //delete the refresh token saved in database:
-        const { refreshToken } = req.body;
-        await Token.findOneAndDelete({ token: refreshToken });
-        return res.status(200).json({ success: "User logged out!" });
+        //get refreshToken
+        const refreshToken = req.body.refreshToken;
+
+        //send error if no refreshToken is sent
+
+        if (!refreshToken) {
+            return res.status(403).json({ error: "Access denied,token missing!" });
+        } else {
+
+            let tokenData = await Token.findOneAndDelete({ token: refreshToken });
+
+            if (!tokenData) {
+
+                return res.status(403).json({ error: "Access denied,Token is expired!" });
+
+            }
+
+            return res.status(200).json({ success: "User logged out!" });
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal Server Error!" });

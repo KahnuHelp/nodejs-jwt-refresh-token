@@ -12,7 +12,7 @@ router.post("/auth/login", AuthController.login);
 
 
 //@route POST /api/auth/refresh_token
-// router.post("/auth/refresh_token", AuthController.generateRefreshToken);
+router.post("/auth/refresh_token", AuthController.generateRefreshToken);
 
 //@route DELETE /api/auth/logout
 router.delete("/auth/logout", AuthController.logout);
