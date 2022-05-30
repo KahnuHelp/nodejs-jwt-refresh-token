@@ -25,7 +25,7 @@ mongoose.connect("mongodb://localhost:27017/authdemo", {
 app.get("/", (req, res) => {
     return res.status(200).send("ok");
 });
-// app.use("/api", api);
+app.use("/api", api);
 
 //start server and listen on port 4000
 app.listen(4000, () => console.log("Server Running on port 4000"));
