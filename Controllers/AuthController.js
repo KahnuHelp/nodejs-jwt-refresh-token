@@ -59,7 +59,8 @@ const AuthController = {
 
                     return res.status(200).json({
                         success: true,
-                        accessToken, accessToken
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
                     });
                 } else {
                     //send error if password is invalid
@@ -88,19 +89,29 @@ const AuthController = {
                 return res.status(403).json({ error: "Access denied,token missing!" });
             } else {
 
-                //query for the token to check if it is valid:
-                const tokenDoc = await Token.findOne({ token: refreshToken });
+                console.log('refreshToken', refreshToken)
 
-                //send error if no token found:
+                //query for the token to check if it is valid:
+                const tokenDoc = await User.findOne({ refreshToken: refreshToken });
+
+                console.log('first', tokenDoc)
+
+                // //send error if no token found:
                 if (!tokenDoc) {
                     return res.status(401).json({ error: "Token expired!" });
                 } else {
 
                     //extract payload from refresh token and generate a new access token and send it
-                    const payload = jwt.verify(tokenDoc.token, REFRESH_TOKEN_SECRET);
+                    const payload = jwt.verify(tokenDoc.refreshToken, REFRESH_TOKEN_SECRET);
+
+                    console.log('fffffffffffffffff', payload);
+
+
                     const accessToken = jwt.sign({ user: payload }, ACCESS_TOKEN_SECRET, {
                         expiresIn: "10m",
                     });
+                    // await User.updateOne({ _id: user.id }, { $set: { refreshToken: refreshToken } });
+
 
                     return res.status(200).json({ accessToken });
                 }
