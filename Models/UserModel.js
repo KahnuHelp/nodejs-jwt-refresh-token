@@ -33,7 +33,7 @@ userSchema.methods = {
                 { user: { _id, username } },
                 ACCESS_TOKEN_SECRET,
                 {
-                    expiresIn: "10m",
+                    expiresIn: "1d",
                 }
             );
             return accessToken;
@@ -49,10 +49,9 @@ userSchema.methods = {
                 { user: { _id, username } },
                 REFRESH_TOKEN_SECRET,
                 {
-                    expiresIn: "1d",
+                    expiresIn: "7d",
                 }
             );
-            await new Token({ token: refreshToken }).save();
             return refreshToken;
         } catch (error) {
             console.error(error);
