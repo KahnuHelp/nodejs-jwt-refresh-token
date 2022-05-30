@@ -36,11 +36,15 @@ const AuthController = {
 
     login: async (req, res) => {
         try {
+
             //check if user exists in database:
             let user = await User.findOne({ username: req.body.username });
             //send error if no user found:
             if (!user) {
-                return res.status(404).json({ error: "No user found!" });
+                return res.status(400).json({
+                    success: false,
+                    error: 'User not found'
+                });
             } else {
                 //check if password is valid:
                 let valid = await bcrypt.compare(req.body.password, user.password);
@@ -53,15 +57,24 @@ const AuthController = {
                     // update the latest refresh token to user table
                     await User.updateOne({ _id: user.id }, { $set: { refreshToken: refreshToken } });
 
-                    return res.status(200).json({ accessToken, refreshToken });
+                    return res.status(200).json({
+                        success: true,
+                        accessToken, accessToken
+                    });
                 } else {
                     //send error if password is invalid
-                    return res.status(401).json({ error: "Invalid password!" });
+                    return res.status(401).json({
+                        success: false,
+                        error: 'Invalid Password!'
+                    });
                 }
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ error: "Internal Server Error!" });
+            return res.status(500).json({
+                success: false,
+                error: error
+            });
         }
     },
 
