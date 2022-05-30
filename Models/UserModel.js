@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    refreshToken: {
+        type: String,
+        // required: true
+    },
 });
 
 
@@ -56,6 +60,9 @@ userSchema.methods = {
         }
     },
 };
+
+
+
 //pre save hook to hash password before saving user into the database:
 userSchema.pre("save", async function (next) {
     try {
